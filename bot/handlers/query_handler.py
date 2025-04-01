@@ -1,3 +1,5 @@
+from bot.config import BOT_TEST_CHANNEL_ID, CRYPTO_CHANNEL_ID, ALLOWED_CHANNELS, STOCKS_CHANNEL_ID
+
 def handle_query(command: str) -> str:
     """
     Process the command and return an appropriate response.
@@ -29,6 +31,45 @@ def handle_help(args):
             )
 
         case "crypto" | "c":
+            return (
+                "Usage: \\crypto [option] | c\n"
+                "Available options:\n"
+                "- price [coin name] [currency] | p: Get the latest price for the given cryptocurrency\n"
+                "- calc [number of coins] [coin name] [currency] | c: Calculate the price of n number of coins\n"
+            )
+
+        case _:
+            return (
+                "Usage: \\[command] help | h\n"
+                "Available commands:\n"
+                "- test: Check if the bot is working\n"
+                "- stocks | s: Get stock and index commands\n"
+                "- crypto | c: Get cryptocurrency commands\n"
+            )
+
+def handle_global_help(args, channel_id):
+    """
+    Process the help command and return a help message.
+    """
+    command = args[0].lower() if args else ""
+    match command:
+        case "test":
+            return "Check if the bot is working"
+
+        case "stocks" | "s":
+            if str(channel_id) not in [STOCKS_CHANNEL_ID, BOT_TEST_CHANNEL_ID]:
+                return "This command is not available in this channel."
+            return (
+                "Usage: \\stocks [option] | s\n"
+                "Available options:\n"
+                "- index [indexname] | i: Get the latest quote for the given index\n"
+                "- equity [stockname] | e: Get the latest quote for the given stock\n"
+                "- calcequity [number of stocks] [stockname] | ce: Get the price of n number of stocks\n"
+            )
+
+        case "crypto" | "c":
+            if str(channel_id) not in [CRYPTO_CHANNEL_ID, BOT_TEST_CHANNEL_ID]:
+                return "This command is not available in this channel."
             return (
                 "Usage: \\crypto [option] | c\n"
                 "Available options:\n"

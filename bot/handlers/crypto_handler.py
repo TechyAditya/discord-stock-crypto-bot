@@ -2,19 +2,19 @@ from bot.handlers.query_handler import handle_help
 from bot.services.crypto import fetch_crypto_data
 
 
-async def handle_crypto(args, user_handle):
+async def handle_crypto(args, user_handle, channel_id):
     """
     Process subquery commands.
     Currently not implemented.
     """
-    command = args[0].lower()
+    command = args[0].lower() if args else None
 
     match command:
         case "crypto":
             return "The bot is working"
 
         case "help":
-            return handle_help("crypto")
+            return handle_help("crypto", channel_id)
 
         case "price" | "p":
             if len(args) < 3:
@@ -62,4 +62,4 @@ async def handle_crypto(args, user_handle):
                 return f"Error occurred: {e}"
 
         case _:
-            return handle_help("crypto")
+            return handle_help("crypto", channel_id)

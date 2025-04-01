@@ -2,19 +2,19 @@ from bot.handlers.query_handler import handle_help
 from bot.services.stocks import print_equity, print_index_quote
 
 
-def handle_stocks(args):
+def handle_stocks(args, channel_id):
     """
     Process subquery commands.
     Currently not implemented.
     """
-    command = args[0].lower()
+    command = args[0].lower() if args else None
 
     match command:
         case "stocks":
             return "The bot is working"
 
         case "help":
-            return handle_help("stocks")
+            return handle_help("stocks", channel_id)
 
         case "index" | "i":
             if len(args) < 2:
@@ -63,4 +63,4 @@ def handle_stocks(args):
                 return f"Error: {e}"
 
         case _:
-            return handle_help("stocks")
+            return handle_help("stocks", channel_id)

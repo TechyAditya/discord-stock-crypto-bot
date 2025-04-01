@@ -3,7 +3,7 @@
 
 import discord
 from discord.ext import commands
-from bot.config import DISCORD_TOKEN, COMMAND_PREFIX, ALLOWED_CHANNELS
+from bot.config import BOT_TEST_CHANNEL_ID, CRYPTO_CHANNEL_ID, DISCORD_TOKEN, COMMAND_PREFIX, ALLOWED_CHANNELS, STOCKS_CHANNEL_ID
 from bot.handlers.query_handler import handle_help, handle_query
 from bot.handlers.stocks_handler import handle_stocks
 from bot.handlers.crypto_handler import handle_crypto
@@ -22,7 +22,7 @@ async def on_ready():
 
 @bot.command(aliais=["ping", "hi", "hello"])
 async def test(ctx):
-    if str(ctx.channel.id) not in ALLOWED_CHANNELS:
+    if str(ctx.channel.id) not in [STOCKS_CHANNEL_ID, CRYPTO_CHANNEL_ID, BOT_TEST_CHANNEL_ID]:
         return
     log_command(ctx.author.name, "test")
     await ctx.send("Bot is alive!")
@@ -33,23 +33,23 @@ async def help(ctx, *args):
     if str(ctx.channel.id) not in ALLOWED_CHANNELS:
         return
     log_command(ctx.author.name, args)
-    await ctx.send(handle_help(args))
+    await ctx.send(handle_help(args, ctx.channel.id))
 
 
 @bot.command(aliases=["s"])
 async def stocks(ctx, *args):
-    if str(ctx.channel.id) not in ALLOWED_CHANNELS:
+    if str(ctx.channel.id) not in [STOCKS_CHANNEL_ID, BOT_TEST_CHANNEL_ID]:
         return
     log_command(ctx.author.name, args)
-    await ctx.send(handle_stocks(args))
+    await ctx.send(handle_stocks(args, ctx.channel.id))
 
 
 @bot.command(aliases=["c"])
 async def crypto(ctx, *args):
-    if str(ctx.channel.id) not in ALLOWED_CHANNELS:
+    if str(ctx.channel.id) not in [CRYPTO_CHANNEL_ID, BOT_TEST_CHANNEL_ID]:
         return
     log_command(ctx.author.name, args)
-    await ctx.send(await handle_crypto(args, ctx.author.mention))
+    await ctx.send(await handle_crypto(args, ctx.author.mention, ctx.channel.id))
 
 
 bot.run(DISCORD_TOKEN)
